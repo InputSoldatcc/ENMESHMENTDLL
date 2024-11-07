@@ -1,0 +1,54 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<RootNamespace>Inputsoldatcc.Zedifier</RootNamespace>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<DisableTransitiveProjectReferences>true</DisableTransitiveProjectReferences>
+		<RunPostBuildEvent>Always</RunPostBuildEvent>
+		<OutDir>.</OutDir>
+	</PropertyGroup>
+	
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+		<StartAction>Program</StartAction>
+		<StartWorkingDirectory>..\..\</StartWorkingDirectory>
+		<StartProgram>./MIR.exe</StartProgram>
+	</PropertyGroup>
+
+	<Target Name="PostBuild" BeforeTargets="PostBuildEvent">
+		<Exec Command="dotnet tool restore --tool-manifest .config/dotnet-tools.json" WorkingDirectory="$(ProjectDir)" />
+		<Exec Command="dotnet waapack -i assets -o assets.waa -f --Id inputsoldatcc.zedificationrequired" WorkingDirectory="$(OutDir)" />
+	</Target>
+
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+		<DebugType>embedded</DebugType>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+		<DebugType>embedded</DebugType>
+	</PropertyGroup>
+	
+	<ItemGroup>
+		<Resource Include="$(ProjectDir)assets\**" CopyToOutputDirectory="Never" />
+	</ItemGroup>
+	
+	<ItemGroup>
+		<Reference Include="..\..\Walgelijk*.dll">
+			<Private>false</Private>
+		</Reference>
+		<Reference Include="..\..\MIR.dll">
+			<Private>false</Private>
+		</Reference>
+		<Reference Include="..\..\OpenTK*.dll">
+			<Private>false</Private>
+		</Reference>
+		<Reference Include="..\..\0Harmony.dll">
+			<Private>false</Private>
+		</Reference>
+		<None Remove="assets.waa" />
+		<None Remove="inputsoldatcc.zedificationrequired.deps.json" />
+		<None Remove="inputsoldatcc.zedificationrequired.dll" />
+	</ItemGroup>
+
+</Project>

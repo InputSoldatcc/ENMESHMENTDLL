@@ -1,0 +1,8 @@
+{
+  "id": "inputsoldatcc.zedificationrequired",
+  "name": "Zedifier",
+  "authors": "InputSoldatcc",
+  "description": "Adds a zombie disk",
+  "binary": "Inputsoldatcc.Zedifier.dll",
+  "devMode": true
+}
