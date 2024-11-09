@@ -50,5 +50,9 @@
 		<None Remove="inputsoldatcc.zedificationrequired.deps.json" />
 		<None Remove="inputsoldatcc.zedificationrequired.dll" />
 	</ItemGroup>
+	
+	<ItemGroup>
+	  <Folder Include="Methods\" />
+	</ItemGroup>
 
 </Project>
