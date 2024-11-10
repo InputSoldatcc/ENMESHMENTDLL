@@ -31,9 +31,7 @@ public class ModEntry : IModEntry
             if (Scenes.New != null && (ImprobabilityDisks.IsEnabled("Enmeshment") || ImprobabilityDisks.IsEnabled("PartialEnmeshment")))
             {
                 foreach (CharacterComponent character in Scenes.New.GetAllComponentsOfType<CharacterComponent>())
-                {
-
-                }
+                    TryAttachZedWatch(character.Entity, character);
 
                 Scenes.New.OnCreateEntity += TryAttachZedWatch;
             }
