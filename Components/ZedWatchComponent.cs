@@ -20,7 +20,7 @@ public class ZedWatchComponent : Component
                 zedStats.Name = TryZombify(character.Stats.Name);
                 Logger.Log("Create");
 
-                MadnessUtils.Delay(3f, () => {
+                MadnessUtils.Delay(1.2f, () => {
                     Prefabs.CreateEnemy(
                         Game.Main.Scene, character.Positioning.Body.GlobalPosition, zedStats, characterLook, Registries.Factions["player"]);
 
