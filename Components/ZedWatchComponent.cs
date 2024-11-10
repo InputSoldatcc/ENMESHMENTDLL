@@ -18,8 +18,12 @@ public class ZedWatchComponent : Component
                 CharacterLook characterLook = new(character.Look);
                 TryZombify(ref characterLook);
 
-                Prefabs.CreateEnemy(
-                    Game.Main.Scene, character.Positioning.Body.GlobalPosition, zedStats, characterLook, Registries.Factions["player"]);
+                MadnessUtils.Delay(1f, () => {
+                    Prefabs.CreateEnemy(
+                        Game.Main.Scene, character.Positioning.Body.GlobalPosition, zedStats, characterLook, Registries.Factions["player"]);
+
+                    character.Delete(Game.Main.Scene);
+                });
             }
         });
     }

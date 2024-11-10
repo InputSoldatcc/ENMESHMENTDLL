@@ -46,8 +46,11 @@ public class ModEntry : IModEntry
     {
         if (Game.Main.Scene.TryGetComponentFrom<CharacterComponent>(entity, out CharacterComponent? character))
         {
-            // We can attach the zedwatcher to the charactercomponent entity here, and give it the character parameter.
-            Game.Main.Scene.AttachComponent<ZedWatchComponent>(entity, new ZedWatchComponent(character));
+            if (Registries.Armour.Head.TryGet("classic_zed_head", out ArmourPiece? zedHead) && character.Look.Head != zedHead)
+            {
+                // We can attach the zedwatcher to the charactercomponent entity here, and give it the character parameter.
+                Game.Main.Scene.AttachComponent<ZedWatchComponent>(entity, new ZedWatchComponent(character));
+            }
         }
     }
 }
