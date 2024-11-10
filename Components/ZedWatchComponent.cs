@@ -12,19 +12,15 @@ public class ZedWatchComponent : Component
     /// <param name="character">The character to watch for.</param>
     public ZedWatchComponent(CharacterComponent character)
     {
-        Logger.Log("Attached");
-        Logger.Log("Listening");
-
         character.OnDeath.AddListener(_ => {
             if (EligibleForEnmeshment() && Registries.Stats.TryGet("zed", out var zedStats))
-            {
-                Logger.Log("is Eligible");
-
+            {   
                 CharacterLook characterLook = new(character.Look);
                 TryZombify(ref characterLook);
-
+                zedStats.Name = TryZombify(character.Stats.Name);
                 Logger.Log("Create");
-                MadnessUtils.Delay(1f, () => {
+
+                MadnessUtils.Delay(3f, () => {
                     Prefabs.CreateEnemy(
                         Game.Main.Scene, character.Positioning.Body.GlobalPosition, zedStats, characterLook, Registries.Factions["player"]);
 
@@ -69,4 +65,11 @@ public class ZedWatchComponent : Component
             Logger.Log("Old chr zombified");
         }
     }
+
+    /// <summary>
+    /// Returns a zedified name of the string.
+    /// </summary>
+    /// <param name="toZedify">The name to zedify</param>
+    /// <returns>The zedified name.</returns>
+    public static string TryZombify(string toZedify) => $"Zed {toZedify}";
 }
