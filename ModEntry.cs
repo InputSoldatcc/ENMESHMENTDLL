@@ -26,9 +26,15 @@ public class ModEntry : IModEntry
         ImprobabilityDisks.All.Add("PartialEnmeshment", new ZedDiskNoBody());
 
         // Attach plz
-        Game.Main.OnSceneChange.AddListener(Scenes => {
+        Game.Main.OnSceneChange.AddListener(Scenes =>
+        {
             if (Scenes.New != null && (ImprobabilityDisks.IsEnabled("Enmeshment") || ImprobabilityDisks.IsEnabled("PartialEnmeshment")))
             {
+                foreach (CharacterComponent character in Scenes.New.GetAllComponentsOfType<CharacterComponent>())
+                {
+
+                }
+
                 Scenes.New.OnCreateEntity += TryAttachZedWatch;
             }
         });
@@ -41,21 +47,26 @@ public class ModEntry : IModEntry
     {
     }
 
+    public static void TryAttachZedWatch(Entity entity, CharacterComponent character)
+    {
+        if (Registries.Armour.Head.TryGet("classic_zed_head", out ArmourPiece? zedHead) && character.Look.Head != zedHead)
+        {
+            Logger.Log("Attaching");
+            // We can attach the zedwatcher to the charactercomponent entity here, and give it the character parameter.
+            Game.Main.Scene.AttachComponent(entity, new ZedWatchComponent(character));
+        }
+    }
+
     /// <summary>
     /// Tries to add ZedWatch to a character component.
     /// </summary>
     public static void TryAttachZedWatch(Entity entity)
     {
-        MadnessUtils.Delay(1, () =>
+        MadnessUtils.Delay(0.5f, () =>
         {
             if (Game.Main.Scene.TryGetComponentFrom(entity, out CharacterComponent? character))
             {
-                if (Registries.Armour.Head.TryGet("classic_zed_head", out ArmourPiece? zedHead) && character.Look.Head != zedHead)
-                {
-                    Logger.Log("Attaching");
-                    // We can attach the zedwatcher to the charactercomponent entity here, and give it the character parameter.
-                    Game.Main.Scene.AttachComponent(entity, new ZedWatchComponent(character));
-                }
+                TryAttachZedWatch(entity, character);
             }
         });
     }
