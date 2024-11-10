@@ -1,10 +1,9 @@
-using System;
 using MIR;
 using Walgelijk;
 
 namespace Inputsoldatcc.Zedifier.Components;
 
-public class ZedWatchComponent : Walgelijk.Component
+public class ZedWatchComponent : Component
 {
     /// <summary>
     /// Hooks to the character's death event,
@@ -14,9 +13,13 @@ public class ZedWatchComponent : Walgelijk.Component
     public ZedWatchComponent(CharacterComponent character)
     {
         character.OnDeath.AddListener(_ => {
-            if (EligibleForEnmeshment())
+            if (EligibleForEnmeshment() && Registries.Stats.TryGet("zed", out var zedStats))
             {
-                // Revive /:
+                CharacterLook characterLook = new(character.Look);
+                TryZombify(ref characterLook);
+
+                Prefabs.CreateEnemy(
+                    Game.Main.Scene, character.Positioning.Body.GlobalPosition, zedStats, characterLook, Registries.Factions["player"]);
             }
         });
     }
@@ -37,5 +40,21 @@ public class ZedWatchComponent : Walgelijk.Component
         }
 
         return false;
+    }
+
+    /// <summary>
+    /// Turns the character look into a zombified version.
+    /// </summary>
+    /// <param name="characterLook">The character look to zombify.</param>
+    public static void TryZombify(ref CharacterLook characterLook)
+    {
+        if (Registries.Armour.Head.TryGet("classic_zed_head", out ArmourPiece? zedHead) && 
+            Registries.Armour.HandArmour.TryGet("classic_zed", out HandArmourPiece? zedHand) &&
+            Registries.Armour.Body.TryGet("classic_zed_body", out ArmourPiece? zedBody))
+        {
+            characterLook.Head = zedHead;
+            characterLook.Hands = zedHand;
+            characterLook.Body = zedBody;
+        }
     }
 }
