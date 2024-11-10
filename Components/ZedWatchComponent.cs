@@ -1,10 +1,9 @@
-using System;
 using MIR;
 using Walgelijk;
 
 namespace Inputsoldatcc.Zedifier.Components;
 
-public class ZedWatchComponent : Walgelijk.Component
+public class ZedWatchComponent : Component
 {
     /// <summary>
     /// Hooks to the character's death event,
@@ -14,9 +13,19 @@ public class ZedWatchComponent : Walgelijk.Component
     public ZedWatchComponent(CharacterComponent character)
     {
         character.OnDeath.AddListener(_ => {
-            if (EligibleForEnmeshment())
-            {
-                // Revive /:
+            if (EligibleForEnmeshment() && Registries.Stats.TryGet("zed", out var zedStats))
+            {   
+                CharacterLook characterLook = new(character.Look);
+                TryZombify(ref characterLook);
+                zedStats.Name = TryZombify(character.Stats.Name);
+                Logger.Log("Create");
+
+                MadnessUtils.Delay(3f, () => {
+                    Prefabs.CreateEnemy(
+                        Game.Main.Scene, character.Positioning.Body.GlobalPosition, zedStats, characterLook, Registries.Factions["player"]);
+
+                    character.Delete(Game.Main.Scene);
+                });
             }
         });
     }
@@ -38,4 +47,29 @@ public class ZedWatchComponent : Walgelijk.Component
 
         return false;
     }
+
+    /// <summary>
+    /// Turns the character look into a zombified version.
+    /// </summary>
+    /// <param name="characterLook">The character look to zombify.</param>
+    public static void TryZombify(ref CharacterLook characterLook)
+    {
+        if (Registries.Armour.Head.TryGet("classic_zed_head", out ArmourPiece? zedHead) && 
+            Registries.Armour.HandArmour.TryGet("classic_zed", out HandArmourPiece? zedHand) &&
+            Registries.Armour.Body.TryGet("classic_zed_body", out ArmourPiece? zedBody))
+        {
+            characterLook.Head = zedHead;
+            characterLook.Hands = zedHand;
+            characterLook.Body = zedBody;
+
+            Logger.Log("Old chr zombified");
+        }
+    }
+
+    /// <summary>
+    /// Returns a zedified name of the string.
+    /// </summary>
+    /// <param name="toZedify">The name to zedify</param>
+    /// <returns>The zedified name.</returns>
+    public static string TryZombify(string toZedify) => $"Zed {toZedify}";
 }
