@@ -17,14 +17,14 @@ public class ZedWatchComponent : Component
             {   
                 CharacterLook characterLook = new(character.Look);
                 TryZombify(ref characterLook);
-                zedStats.Name = TryZombify(character.Stats.Name);
-                Logger.Log("Create");
-
-                MadnessUtils.Delay(1.2f, () => {
-                    Prefabs.CreateEnemy(
+                
+                MadnessUtils.Delay(1.4f, () => {
+                    if (character != null)
+                    {
+                        Prefabs.CreateEnemy(
                         Game.Main.Scene, character.Positioning.Body.GlobalPosition, zedStats, characterLook, Registries.Factions["player"]);
-
-                    character.Delete(Game.Main.Scene);
+                        character.Delete(Game.Main.Scene);
+                    }
                 });
             }
         });
@@ -61,15 +61,6 @@ public class ZedWatchComponent : Component
             characterLook.Head = zedHead;
             characterLook.Hands = zedHand;
             characterLook.Body = zedBody;
-
-            Logger.Log("Old chr zombified");
         }
     }
-
-    /// <summary>
-    /// Returns a zedified name of the string.
-    /// </summary>
-    /// <param name="toZedify">The name to zedify</param>
-    /// <returns>The zedified name.</returns>
-    public static string TryZombify(string toZedify) => $"Zed {toZedify}";
 }
