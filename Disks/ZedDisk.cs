@@ -13,10 +13,20 @@ public class ZedDisk : ImprobabilityDisk
     /// Creates an instance of <see cref="ZedDisk"/>
     /// </summary>
     public ZedDisk() : base(
-        "ZED",
+        "ENMESHMENT",
         Assets.Load<Texture>("textures/Zed.png").Value,
-        "Turns you into a raging corpse")
+        "What is left of your soul is locked to your body.")
     {
+        AbilityDescriptors = [
+            new(){
+                Name = "Infection",
+                Description = "Those slain by your hands will wake up as a Zed."
+            },
+            new(){
+                Name = "Rotted Resilience",
+                Description = "You are blinded by your unconditional love for eating brains, pain does not affect you."
+            }
+        ];
     }
 
     /// <summary>
@@ -49,15 +59,6 @@ public class ZedDisk : ImprobabilityDisk
             var head = scene.GetComponentFrom<BodyPartComponent>(character.Positioning.Head.Entity);
             body.MaxHealth = body.Health = originalZed.BodyHealth;
             head.MaxHealth = head.Health = originalZed.HeadHealth;
-        }
-
-        if (Registries.Armour.Head.TryGet("classic_zed_head", out ArmourPiece? zedHead) && 
-            Registries.Armour.HandArmour.TryGet("classic_zed", out HandArmourPiece? zedHand) &&
-            Registries.Armour.Body.TryGet("classic_zed_body", out ArmourPiece? zedBody))
-        {
-            character.Look.Head = zedHead;
-            character.Look.Hands = zedHand;
-            character.Look.Body = zedBody;
         }
     }
 }

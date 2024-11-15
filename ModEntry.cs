@@ -23,7 +23,7 @@ public class ModEntry : IModEntry
     public void OnReady()
     {
         ImprobabilityDisks.All.Add("Enmeshment", new ZedDisk());
-        ImprobabilityDisks.All.Add("PartialEnmeshment", new ZedDiskNoBody());
+        ImprobabilityDisks.SetIncompatible("Enmeshment", "tricky", "grunt", "agent", "engineer", "soldat");
 
         // Attach plz
         Game.Main.OnSceneChange.AddListener(Scenes =>
@@ -35,7 +35,7 @@ public class ModEntry : IModEntry
                         TryAttachZedWatch(character.Entity, character);
                 });
 
-                Scenes.New.OnCreateEntity += TryAttachZedWatch;
+                Scenes.New.OnCreateEntity += DetectCharacter;
             }
         });
     }
@@ -49,9 +49,8 @@ public class ModEntry : IModEntry
 
     public static void TryAttachZedWatch(Entity entity, CharacterComponent character)
     {
-        if (Registries.Armour.Head.TryGet("classic_zed_head", out ArmourPiece? zedHead) && character.Look.Head != zedHead)
+        if (MadnessUtils.FindPlayer(Game.Main.Scene, out var _, out var player) && character.Faction != player.Faction)
         {
-            Logger.Log("Attaching");
             // We can attach the zedwatcher to the charactercomponent entity here, and give it the character parameter.
             Game.Main.Scene.AttachComponent(entity, new ZedWatchComponent(character));
         }
@@ -60,7 +59,7 @@ public class ModEntry : IModEntry
     /// <summary>
     /// Tries to add ZedWatch to a character component.
     /// </summary>
-    public static void TryAttachZedWatch(Entity entity)
+    public static void DetectCharacter(Entity entity)
     {
         MadnessUtils.Delay(0.5f, () =>
         {
