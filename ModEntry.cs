@@ -3,7 +3,6 @@ using HarmonyLib;
 using Inputsoldatcc.Zedifier.Disks;
 using Walgelijk;
 using Inputsoldatcc.Zedifier.Components;
-using System.Xml.Linq;
 
 namespace Inputsoldatcc.Zedifier;
 
@@ -48,9 +47,10 @@ public class ModEntry : IModEntry
     {
     }
 
+
     public static void TryAttachZedWatch(Entity entity, CharacterComponent character)
     {
-        if (MadnessUtils.FindPlayer(Game.Main.Scene, out var _, out var player) && character.Faction != player.Faction)
+        if (!MadnessUtils.IsPaused(Game.Main.Scene) && MadnessUtils.FindPlayer(Game.Main.Scene, out var _, out var player) && character.Faction != player.Faction)
         {
             // We can attach the zedwatcher to the charactercomponent entity here, and give it the character parameter.
             Game.Main.Scene.AttachComponent(entity, new ZedWatchComponent(character));
@@ -58,7 +58,7 @@ public class ModEntry : IModEntry
     }
 
     /// <summary>
-    /// Tries to add ZedWatch to a character component.
+    /// Tries to find a character from the <paramref name="entity"/>
     /// </summary>
     public static void DetectCharacter(Entity entity)
     {
