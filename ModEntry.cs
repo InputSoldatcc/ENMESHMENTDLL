@@ -3,6 +3,7 @@ using HarmonyLib;
 using Inputsoldatcc.Zedifier.Disks;
 using Walgelijk;
 using Inputsoldatcc.Zedifier.Components;
+using System.Xml.Linq;
 
 namespace Inputsoldatcc.Zedifier;
 
@@ -24,7 +25,7 @@ public class ModEntry : IModEntry
     {
         ImprobabilityDisks.All.Add("Enmeshment", new ZedDisk());
         ImprobabilityDisks.SetIncompatible("Enmeshment", "tricky", "grunt", "agent", "engineer", "soldat");
-
+        
         // Attach plz
         Game.Main.OnSceneChange.AddListener(Scenes =>
         {
