@@ -32,7 +32,7 @@ public class ModEntry : IModEntry
             {
                 MadnessUtils.Delay(1.5f, () => {
                     foreach (var character in Scenes.New.GetAllComponentsOfType<CharacterComponent>())
-                        TryAttachZedWatch(character.Entity, character);
+                        AttachEnmesher(character.Entity, character);
                 });
 
                 Scenes.New.OnCreateEntity += DetectCharacter;
@@ -47,13 +47,19 @@ public class ModEntry : IModEntry
     {
     }
 
-
-    public static void TryAttachZedWatch(Entity entity, CharacterComponent character)
+    /// <summary>
+    /// Tries to attach the <see cref="EnmeshmentComponent"/> to the <see cref="CharacterComponent"/>'s <see cref="Entity"/>
+    /// </summary>
+    /// <param name="entity"></param>
+    /// <param name="character"></param>
+    public static void AttachEnmesher(Entity entity, CharacterComponent character)
     {
-        if (!MadnessUtils.IsPaused(Game.Main.Scene) && MadnessUtils.FindPlayer(Game.Main.Scene, out var _, out var player) && character.Faction != player.Faction)
+        if (MadnessUtils.FindPlayer(Game.Main.Scene, out var _, out var playerCharacter))
         {
-            // We can attach the zedwatcher to the charactercomponent entity here, and give it the character parameter.
-            Game.Main.Scene.AttachComponent(entity, new ZedWatchComponent(character));
+            if (playerCharacter != character)
+            {
+                Game.Main.Scene.AttachComponent(character.Entity, new EnmeshmentComponent());
+            }
         }
     }
 
@@ -62,11 +68,11 @@ public class ModEntry : IModEntry
     /// </summary>
     public static void DetectCharacter(Entity entity)
     {
-        MadnessUtils.Delay(0.5f, () =>
+        _ = MadnessUtils.Delay(1.5f, () =>
         {
             if (Game.Main.Scene.TryGetComponentFrom(entity, out CharacterComponent? character))
             {
-                TryAttachZedWatch(entity, character);
+                AttachEnmesher(entity, character);
             }
         });
     }
