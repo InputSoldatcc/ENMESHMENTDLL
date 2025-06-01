@@ -2,7 +2,6 @@
 using HarmonyLib;
 using Inputsoldatcc.Zedifier.Disks;
 using Walgelijk;
-using Inputsoldatcc.Zedifier.Components;
 
 namespace Inputsoldatcc.Zedifier;
 
@@ -28,22 +27,6 @@ public class ModEntry : IModEntry
     /// Called when the game closes and this mod is unloaded.
     /// </summary>
     public void OnUnload()
-    {
-    }
-
-    /// <summary>
-    /// Tries to attach the <see cref="EnmeshmentComponent"/> to the <see cref="CharacterComponent"/>'s <see cref="Entity"/>
-    /// </summary>
-    /// <param name="entity"></param>
-    /// <param name="character"></param>
-    public static void AttachEnmesher(Entity entity, CharacterComponent character)
-    {
-    }
-
-    /// <summary>
-    /// Tries to find a character from the <paramref name="entity"/>
-    /// </summary>
-    public static void DetectCharacter(Entity entity)
     {
     }
 }
