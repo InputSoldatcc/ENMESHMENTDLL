@@ -37,7 +37,7 @@ public class ZedDisk : ImprobabilityDisk
     public override void Apply(Scene scene, CharacterComponent character)
     {
         var ent = character.Entity;
-        
+
         if (Registries.Stats.TryGet("zed", out var originalZed))
         {
             character.Stats = new()

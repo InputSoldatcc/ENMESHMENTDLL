@@ -14,6 +14,8 @@ public class ModEntry : IModEntry
     /// <param name="harmony">Your Harmony instance</param>
     public void OnLoad(Mod mod, Harmony harmony)
     {
+        ImprobabilityDisks.All.Add("enmesh", new ZedDisk());
+        harmony.PatchAll();
     }
 
     /// <summary>
